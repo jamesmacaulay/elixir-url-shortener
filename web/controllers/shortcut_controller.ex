@@ -3,12 +3,7 @@ defmodule PhoenixUrlShortener.ShortcutController do
 
   alias PhoenixUrlShortener.Shortcut
 
-  plug :scrub_params, "shortcut" when action in [:create, :update]
-
-  def index(conn, _params) do
-    shortcuts = Repo.all(Shortcut)
-    render(conn, "index.json", shortcuts: shortcuts)
-  end
+  plug :scrub_params, "shortcut" when action in [:create]
 
   def create(conn, %{"shortcut" => shortcut_params}) do
     changeset = Shortcut.changeset(%Shortcut{}, shortcut_params)
@@ -24,11 +19,6 @@ defmodule PhoenixUrlShortener.ShortcutController do
         |> put_status(:unprocessable_entity)
         |> render(PhoenixUrlShortener.ChangesetView, "error.json", changeset: changeset)
     end
-  end
-
-  def show(conn, %{"slug" => slug}) do
-    shortcut = Repo.one!(from s in Shortcut, where: s.slug == ^slug)
-    render(conn, "show.json", shortcut: shortcut)
   end
 
   def redirect_to_target(conn, %{"slug" => slug}) do
