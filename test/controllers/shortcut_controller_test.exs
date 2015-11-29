@@ -17,7 +17,7 @@ defmodule PhoenixUrlShortener.ShortcutControllerTest do
 
   test "shows chosen resource", %{conn: conn} do
     shortcut = Repo.insert! Shortcut.changeset(%Shortcut{}, @valid_attrs)
-    conn = get conn, shortcut_path(conn, :show, shortcut.slug)
+    conn = get conn, shortcut_path(conn, :show, shortcut)
     assert json_response(conn, 200)["data"] == %{
       "slug" => shortcut.slug,
       "target_url" => shortcut.target_url
@@ -43,7 +43,7 @@ defmodule PhoenixUrlShortener.ShortcutControllerTest do
 
   test "redirects to target URL" do
     shortcut = Repo.insert! Shortcut.changeset(%Shortcut{}, @valid_attrs)
-    conn = get conn, shortcut_path(conn, :redirect_to_target, shortcut.slug)
+    conn = get conn, shortcut_path(conn, :redirect_to_target, shortcut)
     assert response(conn, 302)
   end
 end

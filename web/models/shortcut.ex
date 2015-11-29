@@ -1,8 +1,9 @@
 defmodule PhoenixUrlShortener.Shortcut do
   use PhoenixUrlShortener.Web, :model
 
+  @primary_key {:slug, :string, autogenerate: false}
+  @derive {Phoenix.Param, key: :slug}
   schema "shortcuts" do
-    field :slug, :string
     field :target_url, :string
 
     timestamps
