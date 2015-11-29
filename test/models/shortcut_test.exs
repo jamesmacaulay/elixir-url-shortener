@@ -19,7 +19,7 @@ defmodule PhoenixUrlShortener.ShortcutTest do
   test "changeset with no slug generates a slug" do
     changeset = Shortcut.changeset(%Shortcut{}, Map.delete(@valid_attrs, :slug))
     assert changeset.valid?
-    assert Map.has_key?(changeset.changes, :slug)
+    assert is_binary(changeset.changes.slug)
   end
 
   test "changeset with a non-http(s) URL is invalid" do

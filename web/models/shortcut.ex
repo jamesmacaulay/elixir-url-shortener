@@ -44,6 +44,6 @@ defmodule PhoenixUrlShortener.Shortcut do
 
   def fill_in_missing_slug(changeset) do
     changeset
-    |> put_change(:slug, Enum.take_random(@slug_chars, 8))
+    |> put_change(:slug, to_string(Enum.take_random(@slug_chars, 8)))
   end
 end

@@ -16,7 +16,7 @@ defmodule PhoenixUrlShortener.ShortcutControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    shortcut = Repo.insert! %Shortcut{}
+    shortcut = Repo.insert! Shortcut.changeset(%Shortcut{}, @valid_attrs)
     conn = get conn, shortcut_path(conn, :show, shortcut)
     assert json_response(conn, 200)["data"] == %{"id" => shortcut.id,
       "slug" => shortcut.slug,
@@ -40,23 +40,9 @@ defmodule PhoenixUrlShortener.ShortcutControllerTest do
     assert json_response(conn, 422)["errors"] != %{}
   end
 
-  test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    shortcut = Repo.insert! %Shortcut{}
-    conn = put conn, shortcut_path(conn, :update, shortcut), shortcut: @valid_attrs
-    assert json_response(conn, 200)["data"]["id"]
-    assert Repo.get_by(Shortcut, @valid_attrs)
-  end
-
-  test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    shortcut = Repo.insert! %Shortcut{}
-    conn = put conn, shortcut_path(conn, :update, shortcut), shortcut: @invalid_attrs
-    assert json_response(conn, 422)["errors"] != %{}
-  end
-
-  test "deletes chosen resource", %{conn: conn} do
-    shortcut = Repo.insert! %Shortcut{}
-    conn = delete conn, shortcut_path(conn, :delete, shortcut)
-    assert response(conn, 204)
-    refute Repo.get(Shortcut, shortcut.id)
+  test "redirects to target URL" do
+    shortcut = Repo.insert! Shortcut.changeset(%Shortcut{}, @valid_attrs)
+    conn = get conn, shortcut_path(conn, :redirect_to_target, shortcut.slug)
+    assert response(conn, 302)
   end
 end

@@ -54,4 +54,9 @@ defmodule PhoenixUrlShortener.ShortcutController do
 
     send_resp(conn, :no_content, "")
   end
+
+  def redirect_to_target(conn, %{"shortcut_slug" => slug}) do
+    shortcut = Repo.one!(from s in Shortcut, where: s.slug == ^slug)
+    redirect(conn, external: shortcut.target_url)
+  end
 end
