@@ -26,12 +26,12 @@ defmodule PhoenixUrlShortener.ShortcutController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    shortcut = Repo.get!(Shortcut, id)
+  def show(conn, %{"slug" => slug}) do
+    shortcut = Repo.one!(from s in Shortcut, where: s.slug == ^slug)
     render(conn, "show.json", shortcut: shortcut)
   end
 
-  def redirect_to_target(conn, %{"shortcut_slug" => slug}) do
+  def redirect_to_target(conn, %{"slug" => slug}) do
     shortcut = Repo.one!(from s in Shortcut, where: s.slug == ^slug)
     redirect(conn, external: shortcut.target_url)
   end

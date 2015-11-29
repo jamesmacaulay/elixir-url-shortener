@@ -23,6 +23,7 @@ defmodule PhoenixUrlShortener.Shortcut do
     |> cast(params, @required_fields, @optional_fields)
     |> validate_uri(:target_url)
     |> fill_in_missing_slug()
+    |> unique_constraint(:slug)
   end
 
   def validate_uri(changeset, field) do
@@ -43,6 +44,7 @@ defmodule PhoenixUrlShortener.Shortcut do
   end
 
   def fill_in_missing_slug(changeset) do
+    :random.seed(:os.timestamp) # returns same slug each request otherwise...where is the best place to put this?
     changeset
     |> put_change(:slug, to_string(Enum.take_random(@slug_chars, 8)))
   end

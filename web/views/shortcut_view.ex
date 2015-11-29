@@ -10,8 +10,7 @@ defmodule PhoenixUrlShortener.ShortcutView do
   end
 
   def render("shortcut.json", %{shortcut: shortcut}) do
-    %{id: shortcut.id,
-      slug: shortcut.slug,
+    %{slug: shortcut.slug,
       target_url: shortcut.target_url}
   end
 end

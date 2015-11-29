@@ -5,11 +5,11 @@ defmodule PhoenixUrlShortener.Router do
     plug :accepts, ["json"]
   end
 
-  get "/s/:shortcut_slug", PhoenixUrlShortener.ShortcutController, :redirect_to_target
+  get "/s/:slug", PhoenixUrlShortener.ShortcutController, :redirect_to_target
 
   scope "/api", PhoenixUrlShortener do
     pipe_through :api
 
-    resources "/shortcuts", ShortcutController, only: [:index, :create, :show]
+    resources "/shortcuts", ShortcutController, param: "slug", only: [:index, :create, :show]
   end
 end

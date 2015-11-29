@@ -17,21 +17,22 @@ defmodule PhoenixUrlShortener.ShortcutControllerTest do
 
   test "shows chosen resource", %{conn: conn} do
     shortcut = Repo.insert! Shortcut.changeset(%Shortcut{}, @valid_attrs)
-    conn = get conn, shortcut_path(conn, :show, shortcut)
-    assert json_response(conn, 200)["data"] == %{"id" => shortcut.id,
+    conn = get conn, shortcut_path(conn, :show, shortcut.slug)
+    assert json_response(conn, 200)["data"] == %{
       "slug" => shortcut.slug,
-      "target_url" => shortcut.target_url}
+      "target_url" => shortcut.target_url
+    }
   end
 
-  test "does not show resource and instead throw error when id is nonexistent", %{conn: conn} do
+  test "does not show resource and instead throw error when slug is nonexistent", %{conn: conn} do
     assert_raise Ecto.NoResultsError, fn ->
-      get conn, shortcut_path(conn, :show, -1)
+      get conn, shortcut_path(conn, :show, "-")
     end
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
     conn = post conn, shortcut_path(conn, :create), shortcut: @valid_attrs
-    assert json_response(conn, 201)["data"]["id"]
+    assert json_response(conn, 201)["data"]["slug"]
     assert Repo.get_by(Shortcut, @valid_attrs)
   end
 
