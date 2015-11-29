@@ -10,6 +10,6 @@ defmodule PhoenixUrlShortener.Router do
   scope "/api", PhoenixUrlShortener do
     pipe_through :api
 
-    resources "/shortcuts", ShortcutController
+    resources "/shortcuts", ShortcutController, only: [:index, :create, :show]
   end
 end

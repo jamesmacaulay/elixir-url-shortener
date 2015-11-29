@@ -31,30 +31,6 @@ defmodule PhoenixUrlShortener.ShortcutController do
     render(conn, "show.json", shortcut: shortcut)
   end
 
-  def update(conn, %{"id" => id, "shortcut" => shortcut_params}) do
-    shortcut = Repo.get!(Shortcut, id)
-    changeset = Shortcut.changeset(shortcut, shortcut_params)
-
-    case Repo.update(changeset) do
-      {:ok, shortcut} ->
-        render(conn, "show.json", shortcut: shortcut)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(PhoenixUrlShortener.ChangesetView, "error.json", changeset: changeset)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    shortcut = Repo.get!(Shortcut, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
-    Repo.delete!(shortcut)
-
-    send_resp(conn, :no_content, "")
-  end
-
   def redirect_to_target(conn, %{"shortcut_slug" => slug}) do
     shortcut = Repo.one!(from s in Shortcut, where: s.slug == ^slug)
     redirect(conn, external: shortcut.target_url)
